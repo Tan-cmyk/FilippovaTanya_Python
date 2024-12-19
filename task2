@@ -1,0 +1,51 @@
+import sys
+
+def read_circle_data(file_path):
+    with open(file_path, 'r') as file:
+        # Считываем координаты центра и радиус
+        center_x, center_y = map(float, file.readline().strip().split())
+        radius = float(file.readline().strip())
+    return (center_x, center_y, radius)
+
+def read_points(file_path):
+    points = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            x, y = map(float, line.strip().split())
+            points.append((x, y))
+    return points
+
+def point_position(circle_center, radius, point):
+    center_x, center_y = circle_center
+    point_x, point_y = point
+    
+    # Вычисляем квадрат расстояния от центра до точки
+    distance_squared = (point_x - center_x) ** 2 + (point_y - center_y) ** 2
+    radius_squared = radius ** 2
+    
+    # Определяем положение точки относительно окружности
+    if distance_squared < radius_squared:
+        return 1  # точка внутри
+    elif distance_squared == radius_squared:
+        return 0  # точка на окружности
+    else:
+        return 2  # точка снаружи
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <circle_file> <points_file>")
+        sys.exit(1)
+
+    circle_file = sys.argv[1]
+    points_file = sys.argv[2]
+
+    # Считываем данные из файлов
+    circle_center = read_circle_data(circle_file)
+    points = read_points(points_file)
+
+    # Для каждой точки определяем её положение относительно окружности
+    results = [point_position(circle_center[:2], circle_center[2], point) for point in points]
+
+    # Выводим результаты
+    for result in results:
+        print(result)
