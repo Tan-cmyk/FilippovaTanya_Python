@@ -1,0 +1,35 @@
+import sys
+
+def circular_array_path(n, m):
+    # Создаем круговой массив
+    circular_array = list(range(1, n + 1))
+    
+    # Начинаем с первого элемента
+    current_index = 0
+    path = []
+
+    while True:
+        # Запоминаем начальный элемент интервала
+        path.append(circular_array[current_index])
+        
+        # Сдвигаем индекс на m шагов вперед
+        current_index = (current_index + m) % n
+        
+        # Если вернулись к первому элементу, завершаем цикл
+        if current_index == 0:
+            break
+
+    return path
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <n> <m>")
+        sys.exit(1)
+
+    n = int(sys.argv[1])
+    m = int(sys.argv[2])
+
+    result_path = circular_array_path(n, m)
+    
+    # Преобразуем список в строку для вывода
+    print(''.join(map(str, result_path)))
