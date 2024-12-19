@@ -1,0 +1,39 @@
+import json
+import sys
+
+def fill_report(tests_structure, values):
+    def recursive_fill(tests):
+        for test in tests:
+            test_id = test.get("id")
+            if test_id in values:
+                test["value"] = values[test_id]
+            if "subtests" in test:
+                recursive_fill(test["subtests"])
+
+    recursive_fill(tests_structure["tests"])
+
+def main(values_file, tests_file, report_file):
+    # Считываем данные из файлов
+    with open(values_file, 'r') as vf:
+        values = json.load(vf)
+
+    with open(tests_file, 'r') as tf:
+        tests_structure = json.load(tf)
+
+    # Заполняем структуру отчетов
+    fill_report(tests_structure, values)
+
+    # Записываем результат в report.json
+    with open(report_file, 'w') as rf:
+        json.dump(tests_structure, rf, indent=4)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python script.py <values_file> <tests_file> <report_file>")
+        sys.exit(1)
+
+    values_file = sys.argv[1]
+    tests_file = sys.argv[2]
+    report_file = sys.argv[3]
+
+    main(values_file, tests_file, report_file)
